@@ -445,4 +445,4 @@ We're always looking to improve! Feel free to suggest:
 
 **Universal ACPP Compressor 2.0** - *Reliable compression for the modern world* 🚀
 
-Made with ❤️ by the ACPP development team
+Made with ❤️ by the NOT Punks Team

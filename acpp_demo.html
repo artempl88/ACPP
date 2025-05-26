@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ACPP Algorithm Demo</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        .demo-container {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            margin-bottom: 20px;
+        }
+
+        .input-section {
+            margin-bottom: 30px;
+        }
+
+        .input-section h3 {
+            margin-bottom: 15px;
+            color: #4a5568;
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 10px;
+        }
+
+        textarea {
+            width: 100%;
+            height: 150px;
+            padding: 15px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            resize: vertical;
+            transition: border-color 0.3s;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 20px 0;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .compress-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 25px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            font-weight: 600;
+        }
+
+        .compress-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .compress-btn:active {
+            transform: translateY(0);
+        }
+
+        .settings {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .setting-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .setting-group label {
+            font-size: 12px;
+            color: #666;
+            font-weight: 600;
+        }
+
+        .setting-group input {
+            padding: 5px 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            width: 80px;
+        }
+
+        .results {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .result-box {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 20px;
+        }
+
+        .result-box h4 {
+            color: #2d3748;
+            margin-bottom: 15px;
+            font-size: 1.1em;
+        }
+
+        .stats {
+            display: grid;
+            gap: 10px;
+        }
+
+        .stat-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .stat-item:last-child {
+            border-bottom: none;
+        }
+
+        .stat-label {
+            color: #4a5568;
+            font-weight: 500;
+        }
+
+        .stat-value {
+            color: #2d3748;
+            font-weight: 600;
+        }
+
+        .compression-ratio {
+            background: linear-gradient(90deg, #48bb78, #38a169);
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .compression-ratio h3 {
+            margin-bottom: 5px;
+        }
+
+        .visualization {
+            margin-top: 20px;
+        }
+
+        .context-examples {
+            background: #edf2f7;
+            border-radius: 6px;
+            padding: 15px;
+            margin-top: 15px;
+        }
+
+        .context-examples h5 {
+            margin-bottom: 10px;
+            color: #4a5568;
+        }
+
+        .context-item {
+            background: white;
+            padding: 8px 12px;
+            margin: 5px 0;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .prediction-viz {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 10px;
+        }
+
+        .prediction-item {
+            background: #bee3f8;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        @media (max-width: 768px) {
+            .results {
+                grid-template-columns: 1fr;
+            }
+            
+            .controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .settings {
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🗜️ ACPP Compressor</h1>
+            <p>Adaptive Contextual Pattern Prediction - Demo of Innovative Compression Algorithm</p>
+        </div>
+
+        <div class="demo-container">
+            <div class="input-section">
+                <h3>📝 Input Data</h3>
+                <textarea id="inputText" placeholder="Enter text for compression or use the example...">This is a demonstration of the innovative ACPP data compression algorithm.
+The algorithm analyzes context and predicts next symbols.
+For efficient compression, the algorithm uses multi-level modeling.
+Multi-level modeling allows analyzing data at different levels.
+The ACPP algorithm surpasses traditional compression methods through adaptivity.
+Adaptivity is achieved through dynamic selection of encoding methods.
+The demonstration shows main principles of the compression algorithm.
+Working principles include entropy analysis and predictive encoding.</textarea>
+            </div>
+
+            <div class="controls">
+                <button class="compress-btn" onclick="compressData()">🚀 Compress Data</button>
+                
+                <div class="settings">
+                    <div class="setting-group">
+                        <label>Context Length</label>
+                        <input type="number" id="contextLength" value="6" min="1" max="12">
+                    </div>
+                    <div class="setting-group">
+                        <label>Prediction Depth</label>
+                        <input type="number" id="predictionDepth" value="3" min="1" max="8">
+                    </div>
+                    <div class="setting-group">
+                        <label>Entropy Threshold</label>
+                        <input type="number" id="entropyThreshold" value="0.7" min="0.1" max="1" step="0.1">
+                    </div>
+                </div>
+            </div>
+
+            <div class="results" id="results" style="display: none;">
+                <div class="result-box">
+                    <h4>📊 Compression Statistics</h4>
+                    <div class="stats" id="compressionStats"></div>
+                    
+                    <div class="compression-ratio" id="compressionRatio">
+                        <h3>Compression Rate</h3>
+                        <div id="ratioValue">0%</div>
+                    </div>
+                </div>
+
+                <div class="result-box">
+                    <h4>🔍 Algorithm Analysis</h4>
+                    <div class="stats" id="algorithmStats"></div>
+                    
+                    <div class="context-examples" id="contextExamples">
+                        <h5>Found context examples:</h5>
+                        <div id="contextList"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="visualization" id="visualization" style="display: none;">
+                <h3>🎯 Prediction Visualization</h3>
+                <div id="predictionViz"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        class ACPPSimulator {
+            constructor(contextLength = 6, predictionDepth = 3, entropyThreshold = 0.7) {
+                this.contextLength = contextLength;
+                this.predictionDepth = predictionDepth;
+                this.entropyThreshold = entropyThreshold;
+                this.contexts = new Map();
+                this.patterns = new Map();
+                this.charFreq = new Map();
+            }
+
+            calculateEntropy(text) {
+                const freq = new Map();
+                for (let char of text) {
+                    freq.set(char, (freq.get(char) || 0) + 1);
+                }
+                
+                let entropy = 0;
+                const length = text.length;
+                for (let count of freq.values()) {
+                    const p = count / length;
+                    entropy -= p * Math.log2(p);
+                }
+                
+                return entropy / Math.log2(256); // Normalization
+            }
+
+            buildContexts(text) {
+                // Character contexts
+                for (let i = 0; i < text.length - 1; i++) {
+                    for (let len = 1; len <= Math.min(this.contextLength, text.length - i - 1); len++) {
+                        const context = text.substr(i, len);
+                        const nextChar = text[i + len];
+                        
+                        if (!this.contexts.has(context)) {
+                            this.contexts.set(context, new Map());
+                        }
+                        const contextMap = this.contexts.get(context);
+                        contextMap.set(nextChar, (contextMap.get(nextChar) || 0) + 1);
+                    }
+                }
+
+                // Character frequencies
+                for (let char of text) {
+                    this.charFreq.set(char, (this.charFreq.get(char) || 0) + 1);
+                }
+
+                // Find repeating patterns
+                for (let len = 3; len <= Math.min(20, text.length / 3); len++) {
+                    const patterns = new Map();
+                    for (let i = 0; i <= text.length - len; i++) {
+                        const pattern = text.substr(i, len);
+                        patterns.set(pattern, (patterns.get(pattern) || 0) + 1);
+                    }
+                    
+                    for (let [pattern, count] of patterns) {
+                        if (count >= 2) {
+                            this.patterns.set(pattern, count);
+                        }
+                    }
+                }
+            }
+
+            predictNext(context) {
+                const predictions = [];
+                
+                // Try different context lengths
+                for (let len = Math.min(context.length, this.contextLength); len > 0; len--) {
+                    const ctx = context.substr(-len);
+                    if (this.contexts.has(ctx)) {
+                        const contextMap = this.contexts.get(ctx);
+                        const total = Array.from(contextMap.values()).reduce((a, b) => a + b, 0);
+                        
+                        for (let [char, count] of contextMap) {
+                            predictions.push({
+                                char: char,
+                                probability: count / total,
+                                context: ctx
+                            });
+                        }
+                        break;
+                    }
+                }
+                
+                return predictions
+                    .sort((a, b) => b.probability - a.probability)
+                    .slice(0, this.predictionDepth);
+            }
+
+            simulate(text) {
+                this.contexts.clear();
+                this.patterns.clear();
+                this.charFreq.clear();
+
+                this.buildContexts(text);
+
+                // Compression simulation
+                let compressedSize = 0;
+                let predictiveHits = 0;
+                let totalPredictions = 0;
+                
+                const chunkSize = 100;
+                const chunks = [];
+                
+                for (let i = 0; i < text.length; i += chunkSize) {
+                    const chunk = text.substr(i, chunkSize);
+                    const entropy = this.calculateEntropy(chunk);
+                    chunks.push({
+                        text: chunk,
+                        entropy: entropy,
+                        method: entropy < this.entropyThreshold ? 'predictive' : 'huffman'
+                    });
+                }
+
+                for (let chunk of chunks) {
+                    if (chunk.method === 'predictive') {
+                        // Predictive encoding simulation
+                        let context = '';
+                        for (let char of chunk.text) {
+                            const predictions = this.predictNext(context);
+                            totalPredictions++;
+                            
+                            const found = predictions.find(p => p.char === char);
+                            if (found && found.probability > 0.3) {
+                                compressedSize += 2; // Save 6 bits instead of 8
+                                predictiveHits++;
+                            } else {
+                                compressedSize += 8; // Full byte
+                            }
+                            
+                            context = (context + char).substr(-this.contextLength);
+                        }
+                    } else {
+                        // Huffman encoding simulation
+                        const freq = new Map();
+                        for (let char of chunk.text) {
+                            freq.set(char, (freq.get(char) || 0) + 1);
+                        }
+                        
+                        // Simplified Huffman estimation
+                        let huffmanBits = 0;
+                        for (let [char, count] of freq) {
+                            const probability = count / chunk.text.length;
+                            const bits = Math.max(1, Math.ceil(-Math.log2(probability)));
+                            huffmanBits += count * bits;
+                        }
+                        compressedSize += huffmanBits;
+                    }
+                }
+
+                return {
+                    originalSize: text.length * 8, // in bits
+                    compressedSize: compressedSize,
+                    compressionRatio: compressedSize / (text.length * 8),
+                    spaceSavings: (1 - compressedSize / (text.length * 8)) * 100,
+                    contextsFound: this.contexts.size,
+                    patternsFound: this.patterns.size,
+                    predictiveAccuracy: totalPredictions > 0 ? (predictiveHits / totalPredictions) * 100 : 0,
+                    chunks: chunks
+                };
+            }
+
+            getTopContexts(limit = 5) {
+                const contexts = Array.from(this.contexts.entries())
+                    .map(([context, predictions]) => {
+                        const total = Array.from(predictions.values()).reduce((a, b) => a + b, 0);
+                        const topPrediction = Array.from(predictions.entries())
+                            .sort((a, b) => b[1] - a[1])[0];
+                        
+                        return {
+                            context: context,
+                            frequency: total,
+                            topPrediction: topPrediction ? {
+                                char: topPrediction[0],
+                                probability: topPrediction[1] / total
+                            } : null
+                        };
+                    })
+                    .sort((a, b) => b.frequency - a.frequency)
+                    .slice(0, limit);
+                
+                return contexts;
+            }
+
+            getTopPatterns(limit = 5) {
+                return Array.from(this.patterns.entries())
+                    .sort((a, b) => b[1] - a[1])
+                    .slice(0, limit)
+                    .map(([pattern, count]) => ({ pattern, count }));
+            }
+        }
+
+        function compressData() {
+            const text = document.getElementById('inputText').value;
+            if (!text.trim()) {
+                alert('Please enter text for compression');
+                return;
+            }
+
+            const contextLength = parseInt(document.getElementById('contextLength').value);
+            const predictionDepth = parseInt(document.getElementById('predictionDepth').value);
+            const entropyThreshold = parseFloat(document.getElementById('entropyThreshold').value);
+
+            const simulator = new ACPPSimulator(contextLength, predictionDepth, entropyThreshold);
+            const results = simulator.simulate(text);
+
+            displayResults(results, simulator);
+        }
+
+        function displayResults(results, simulator) {
+            // Show results block
+            document.getElementById('results').style.display = 'grid';
+            document.getElementById('visualization').style.display = 'block';
+
+            // Compression statistics
+            const compressionStats = document.getElementById('compressionStats');
+            compressionStats.innerHTML = `
+                <div class="stat-item">
+                    <span class="stat-label">Original size:</span>
+                    <span class="stat-value">${(results.originalSize / 8).toLocaleString()} bytes</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Compressed size:</span>
+                    <span class="stat-value">${Math.ceil(results.compressedSize / 8).toLocaleString()} bytes</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Space savings:</span>
+                    <span class="stat-value">${results.spaceSavings.toFixed(1)}%</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Compression ratio:</span>
+                    <span class="stat-value">${results.compressionRatio.toFixed(3)}</span>
+                </div>
+            `;
+
+            // Compression ratio
+            document.getElementById('ratioValue').textContent = `${results.spaceSavings.toFixed(1)}%`;
+
+            // Algorithm statistics
+            const algorithmStats = document.getElementById('algorithmStats');
+            algorithmStats.innerHTML = `
+                <div class="stat-item">
+                    <span class="stat-label">Contexts found:</span>
+                    <span class="stat-value">${results.contextsFound.toLocaleString()}</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Patterns found:</span>
+                    <span class="stat-value">${results.patternsFound.toLocaleString()}</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Prediction accuracy:</span>
+                    <span class="stat-value">${results.predictiveAccuracy.toFixed(1)}%</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Blocks processed:</span>
+                    <span class="stat-value">${results.chunks.length}</span>
+                </div>
+            `;
+
+            // Context examples
+            const topContexts = simulator.getTopContexts(8);
+            const contextList = document.getElementById('contextList');
+            contextList.innerHTML = topContexts.map(ctx => `
+                <div class="context-item">
+                    <span>"${ctx.context}" → "${ctx.topPrediction?.char || '?'}"</span>
+                    <span>${(ctx.topPrediction?.probability * 100 || 0).toFixed(1)}%</span>
+                </div>
+            `).join('');
+
+            // Prediction visualization
+            const predictionViz = document.getElementById('predictionViz');
+            const sampleText = document.getElementById('inputText').value.substr(0, 100);
+            let vizHtml = '<div style="margin-bottom: 15px;"><strong>Analysis of first 100 characters:</strong></div>';
+            
+            let context = '';
+            for (let i = 0; i < Math.min(50, sampleText.length); i++) {
+                const char = sampleText[i];
+                const predictions = simulator.predictNext(context);
+                const predicted = predictions.length > 0 && predictions[0].char === char;
+                
+                vizHtml += `<span style="background: ${predicted ? '#c6f6d5' : '#fed7d7'}; padding: 2px 4px; margin: 1px; border-radius: 3px; font-family: monospace;">${char === ' ' ? '␣' : char}</span>`;
+                
+                context = (context + char).substr(-simulator.contextLength);
+            }
+            
+            predictionViz.innerHTML = vizHtml + '<div style="margin-top: 10px; font-size: 12px; color: #666;"><span style="background: #c6f6d5; padding: 2px 4px; border-radius: 3px;">Predicted correctly</span> <span style="background: #fed7d7; padding: 2px 4px; border-radius: 3px;">Not predicted</span></div>';
+        }
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            // Can add automatic demonstration
+        });
+    </script>
+</body>
+</html>

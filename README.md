@@ -1,6 +1,8 @@
 # Universal ACPP Compressor 2.0
 ## Adaptive Contextual Pattern Prediction - Universal Lossless Compression Algorithm
 
+![Universal ACPP Logo](logo.png)
+
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Python 3.7+](https://img.shields.io/badge/Python-3.7+-blue.svg)](https://www.python.org/downloads/)
 [![Platform](https://img.shields.io/badge/Platform-Windows%20%7C%20macOS%20%7C%20Linux-lightgrey.svg)](https://github.com/yourusername/universal-acpp)

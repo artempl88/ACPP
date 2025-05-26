@@ -365,26 +365,6 @@ python -m mypy acpp.py
 4. Push to the branch (`git push origin feature/amazing-feature`)
 5. Open a Pull Request
 
-## 📋 Roadmap
-
-### Version 2.1 (Q2 2024)
-- [ ] Multi-threading support for parallel compression
-- [ ] GUI application with progress bars
-- [ ] File manager integration (Windows Explorer, macOS Finder)
-- [ ] Additional export formats (TAR.ACPP, etc.)
-
-### Version 3.0 (Q4 2024)
-- [ ] Machine learning-based prediction models
-- [ ] Distributed compression across multiple machines
-- [ ] Cloud storage integration (AWS S3, Google Cloud)
-- [ ] Specialized profiles for different data types
-
-### Long-term Goals
-- [ ] Hardware acceleration support (GPU compression)
-- [ ] Real-time streaming compression
-- [ ] Integration with popular backup solutions
-- [ ] Enterprise management console
-
 ## 📄 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
